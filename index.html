@@ -1,0 +1,1220 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+     <!-- Angular Material style sheet -->
+  <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.12/angular-material.min.css">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">  
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+    <title>Product Search</title>
+  </head>
+  <style>
+    .material-icons.md-dark { color: rgba(0, 0, 0, 0.54); }
+   .invalid_border{
+     border:1px solid red;
+   }
+   .highlight{
+   	background-color:#c6c8ca!important;
+   }
+   .myspan{
+   	color:red;
+   }
+  .tabsdemoDynamicHeight md-content h1:first-child {
+    margin-top: 0; 
+   }
+   .nav-link{
+    color: black!important;
+   }
+  .nav>li>a.active,
+  .nav>li>a:hover,
+  .nav>li>a:focus{
+    background-color:black!important;
+    color: white!important;
+  }
+
+  .pagination>li.active>a {
+    background-color:black!important;
+    color: white!important;
+    border: 0;
+  }
+  .pagination>li>a,
+  .pagination>li>span {
+	border: 0;
+  }
+
+.my-img { 
+   border:5px solid black;
+}
+
+.my-img2{
+   border:5px solid black;
+   margin-top: 10px;
+}
+.underline-on-hover:hover {
+    text-decoration: underline;
+}
+.padding-0{
+    padding-right:5px;
+    padding-left:5px;
+}
+.arrow{
+	color:white;
+	background-color: black;
+	width:20px;
+	height: 20px;
+}
+
+.slide-left {
+ -webkit-transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 1s;
+    -moz-transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 1s;
+    -o-transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 1s;
+    transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 1s;
+  width:100%;
+  opacity:1;
+  position: absolute;
+  left: 0;
+}
+
+.slide-left.ng-hide {
+  left: -100%;
+  opacity:0;
+}
+
+
+.related-text{
+   display: none;
+}
+.similar-text{
+   display:inline-block;
+}
+
+@media only screen and (max-width: 700px) {
+  .related-text{
+    display: inline-block;
+  }
+  .similar-text{
+    display:none;
+  }
+}
+
+.whitebackdrop{
+	opacity: 0;
+}
+
+.tooltip-multiline {
+   height: auto !important;
+   max-width: 200px !important;
+   overflow: visible !important;
+   white-space: normal !important;
+}
+  </style>
+  
+  <body ng-app="myApp" ng-cloak ng-init="method='here'" style="background-color: #f8f9fa">
+<div class="container" >
+  <div class="row justify-content-md-center">
+    <!-- <div class="col-2"></div> -->
+    <div class="col-md-10 col-xs-12" ng-controller="myCtrl" >
+      <form name="myForm" style="padding-top:20px;padding-bottom: 10px;" class="bg-dark text-white">
+        <div class="row">
+        	<div class="col-md-2"></div><!-- left padding-->
+        	<div class="col-md-8 col-xs-12"><!-- middle part-->
+        		<h1 style="margin-bottom: 20px;" class="text-center">Product Search</h1>
+        <div class="form-group row">
+          <label for="keyword" class="col-md-4 col-form-label">Keyword<span class="myspan">*</span></label>
+          <div class="col-md-8 col-xs-12">
+            <input name="keyword" ng-class="{invalid_border: myForm.keyword.$touched && myForm.keyword.$invalid}" ng-model="keyword" required type="text" class="form-control" placeholder="Enter Product Name(eg. iPhone8)">
+            <span class="myspan" ng-show="myForm.keyword.$touched && myForm.keyword.$invalid">Please enter a keyword</span>
+
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label for="catergory" class="col-md-4 col-form-label">Categories</label>
+          <div class="col-md-4 col-xs-12">
+          <select ng-model="category" class="form-control " id="category" name="category">
+            <option value="0">All Categories</option>
+            <option value="550">Art</option>
+            <option value="2984">Baby</option>
+            <option value="267">Books</option>
+            <option value="11450">Clothing,Shoes & Accessories</option>
+            <option value="58058">Computers/Tablets & Networking</option>
+            <option value="26395">Health & Beauty</option>
+            <option value="11233">Music</option>
+            <option value="1249">Video Games & Consoles</option>
+          </select>
+          </div>
+        </div>
+        
+
+        <div class="form-group row">
+          <div class="col-md-4 col-xs-12">Condition</div>
+          <div class="col-md-8 col-xs-12">
+          	<div class="row flex-nowrap">
+          		  <div class="col-md-2 col-xs-2" >
+		            <div class="form-check">
+		              <input ng-model="new" class="form-check-input" type="checkbox" id="new">
+		              <label class="form-check-label" for="new">
+		                New
+		              </label>
+		            </div>
+		          </div>
+		          <div class="col-md-2 col-xs-2">
+		            <div class="form-check">
+		              <input ng-model="used" class="form-check-input" type="checkbox" id="used">
+		              <label class="form-check-label" for="used">
+		                Used
+		              </label>
+		            </div>
+		          </div>
+		          <div class="col-md-2 col-xs-2">
+		            <div class="form-check">
+		              <input ng-model="unspec" class="form-check-input" type="checkbox" id="unspecified">
+		              <label class="form-check-label" for="unspecified">
+		                Unspecified
+		              </label>
+		            </div>
+		          </div>
+		          <div class="col-md-2 col-xs-4">
+		          </div>
+          	</div> <!--row-->
+          </div> <!--col 12 -->
+          
+        </div>  <!--form group-->
+
+        <div class="form-group row">
+          <div class="col-md-4 col-xs-12">Shipping Options</div>
+          <div class="col-md-6 col-xs-12">
+          	<div class="row flex-nowrap justify-content-start">
+          	  <div class="col-md-6 col-xs-5">
+	            <div class="form-check">
+	              <input ng-model="pickup" class="form-check-input" type="checkbox" id="pickup" name="pickup">
+	              <label class="form-check-label" for="pickup">
+	                Local Pickup
+	              </label>
+	            </div>
+	          </div>
+	          <div class="col-md-6 col-xs-5">
+	            <div class="form-check">
+	              <input ng-model="free" class="form-check-input" type="checkbox" id="free" name="free">
+	              <label class="form-check-label" for="free">
+	                Free Shipping
+	              </label>
+	            </div>
+	          </div>
+          	</div>
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label for="distance" class="col-md-4 col-form-label">Distance(Miles)</label>
+          <div class="col-md-4 col-xs-12">
+            <input ng-model="distance" type="text" class="form-control" name="distance" id="distance" placeholder="10">
+          </div>
+        </div>
+
+
+        <div class="form-group row">
+          <legend class="col-form-label col-md-4 pt-0">From<span class="myspan">*</span></legend>
+          <div class="col-md-8">
+            <div class="form-check">
+
+              <input ng-checked="method=='here'" ng-model="method"  type="radio" value="here" class="form-check-input" name="method">
+
+              <input ng-model="herezip" type="hidden" id="herezip" name="herezip" value="">
+              <label class="form-check-label" for="here">
+                Current Location
+              </label>
+
+            </div>
+            <div class="form-check">
+
+              <input ng-model="method" type="radio"  value="zip" class="form-check-input" name="method">
+
+              <label class="form-check-label" for="zip">
+                Other,please specify zip code
+              </label>
+            </div>
+          </div>
+        </div>
+        
+        <div class="form-group row">
+          <label for="zipcode" class="col-md-4 col-form-label"></label>
+
+          <div class="col-md-6" ng-controller="myCtrl as ctrl"  ng-cloak>
+            <md-content >
+                <md-autocomplete
+                    md-input-name="myzipcode"
+                    ng-class="{whitebackdrop:method=='here'}"
+                    ng-class="{invalid_border:method=='zip' && myForm.myzipcode.$invalid}"
+                    md-selected-item="ctrl.selectedItem"
+                    md-search-text-change="ctrl.searchTextChange(myForm.myzipcode.$viewValue)"
+                    md-search-text="myForm.myzipcode.$viewValue"
+                    md-selected-item-change="ctrl.selectedItemChange(item)"
+                    md-items="item in ctrl.querySearch(myForm.myzipcode.$viewValue)"
+                    md-item-text="item.display"
+                    md-min-length="0"
+                    md-no-cache="true"
+                    ng-pattern="/^(\d{5}(-\d{4})?|[A-Z]\d[A-Z] *\d[A-Z]\d)$/"
+                    ng-disabled="method=='here'"
+                    md-clear-button="false"
+                    placeholder="">
+                    <!-- <input > -->
+                  <md-item-template >
+                    <span style="color:black" md-highlight-text="myForm.myzipcode.$viewValue" md-highlight-flags="^i">{{item.display}}</span>
+                  </md-item-template>
+                  <md-not-found>
+                    No Postalcode matching "{{myForm.myzipcode.$viewValue}}" were found.
+                  </md-not-found>
+                </md-autocomplete>
+            </md-content>
+            <span class="myspan" ng-show="method=='zip' && myForm.myzipcode.$invalid || method=='zip' && myForm.myzipcode.$viewValue.length==0">Please enter a zipcode</span>
+          </div>
+
+        </div>
+
+        <div class="form-group row">
+          <div class="col-md-6 col-xm-12">
+            <button ng-click="search()" ng-disabled="myForm.keyword.$invalid || method=='here'&& $scope.herezip.length==0 || method=='zip' && myForm.myzipcode.$invalid || method=='zip' && myForm.myzipcode.$viewValue.length==0" type="submit" class="btn btn-sm btn-light"><i style="vertical-align:middle;" class="material-icons md-18">search</i>Search</button>
+            
+            <button style="margin-left:20px;" ng-click="reset()" type="submit" class="btn btn-sm btn-light"><i style="vertical-align:middle;"class="material-icons md-18">clear_all</i>Clear</button>
+          </div>
+        </div>
+
+        	
+        	</div> <!-- middle part-->
+        	
+        	<div class="col-md-2"></div> <!-- right padding-->
+        </div> <!-- big row-->
+
+      </form>
+
+      <div style="margin-top:20px" class="row justify-content-center">
+          <ul class="nav nav-pills">
+              <li class="nav-item">
+                <a id="resultpill" class="nav-link active" data-toggle="tab" ng-click="listTab()" href="#result">Result</a>
+              </li>
+              <li class="nav-item">
+                <a id="wishpill" class="nav-link" data-toggle="tab" ng-click="wishTab()" href="#wishList">WishList</a>
+              </li>
+          </ul>
+      </div>
+      
+      <div style="margin-top: 20px;margin-bottom: 10px" id="loading-bar-container"></div>
+        <div  class="slide-left" ng-show="resultFlag" class="tab-content">
+          <div id="result" class="tab-pane fade show active">
+              <div ng-model="errorMsg" ng-show=listError class="alert alert-warning" role="alert">
+                  {{errorMsg}}
+              </div>
+
+              <div class="slide-left" ng-show="!listError && listFlag">
+                <button ng-click="detailTab()" ng-disabled="disableDetail" class="btn btn-sm btn-light float-right">Detail<i style="vertical-align:middle;" class="material-icons md-18">keyboard_arrow_right</i></button>
+                  <div class="table-responsive-sm">
+                    <table class="table table-sm table-hover table-striped table-dark">
+                        <thead>
+                            <tr>
+                                <th class="index" >#&nbsp;</th>
+                                <th class="image" >Image&nbsp;</th>
+                                <th class="title" >Title&nbsp;</th>
+                                <th class="price" >Price&nbsp;</th>
+                                <th class="shipping" >Shipping&nbsp;</th>
+                                <th class="zip" >Zip&nbsp;</th>
+                                <th class="seller" >Selller&nbsp;</th>
+                                <th class="wishlist" >Wish List</th>
+                            </tr>
+                        </thead>
+                        <tbody style="font-size:12px;">
+                            <!-- | orderBy:sort.sortingOrder:sort.reverse -->
+                            <tr ng-class="{highlight:currentItem.id==item.id}" ng-repeat="item in pagedItems[currentPage] ">
+                                <td>{{item.index}}</td>
+                                <td>
+                                  <a ng-href="{{item.image}}" target="_blank">
+                                    <img style="width:100px;height:100px;" ng-src="{{item.image}}" alt="N/A" />
+                                  </a>
+                                </td>
+                                <td>
+                                 <a ng-click="showDetail(item,item.shippingInfo)">
+                                   <md-tooltip class="tooltip-multiline">{{item.title}}</md-tooltip>
+
+                                   <p class="underline-on-hover" style="color:blue">{{item.title | limitTo : 35}}...
+                                   </p>
+                                 </a>
+                                </td>
+
+                                <td>${{item.price}}</td>
+                                <td><span style="color:white" ng-show="item.shipping!='Free Shipping'">$</span>{{item.shipping}}</td>
+                                <td>{{item.zip}}</td>
+                                <td>{{item.seller | uppercase}}</td>
+                                <td>
+                                  <button ng-show="!item.wishList" ng-click="addShoppingCart(item)" type="submit" class="btn btn-primary btn-light ">
+                                      <i class="material-icons md-24 md-dark">
+                                          add_shopping_cart
+                                      </i>
+                                  </button>
+
+                                  <button ng-show="item.wishList" ng-click="removeShoppingCart(item)" type="submit" class="btn btn-primary btn-light ">
+                                      <i style="color:darkgoldenrod" class="material-icons md-24">
+                                          remove_shopping_cart
+                                      </i>
+                                  </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    </div>
+                    <nav  aria-label="Page navigation example">
+	                    <ul class="pagination justify-content-md-center">
+
+	                      <li class="page-item" ng-class="{disabled: currentPage == 0}">
+	                          <a class="page-link text-dark" href ng-click="prevPage()">« Prev</a>
+	                      </li>
+	                  
+	                      <li class="page-item" ng-repeat="n in range(pagedItems.length, currentPage, currentPage + gap) "
+	                          ng-class="{active: n == currentPage}"
+	                      ng-click="setPage()">
+	                          <a  class="page-link text-dark" href ng-bind="n + 1">1</a>
+	                      </li>
+	                   
+	                      <li class="page-item" ng-class="{disabled: (currentPage) == pagedItems.length - 1}">
+	                          <a class="page-link text-dark" href ng-click="nextPage()">Next »</a>
+	                      </li>
+	                    </ul>
+	                  </nav>
+                
+              </div>
+              
+          </div> <!--  result layer -->
+
+          <div id="wishList" class="tab-pane">
+              <div ng-show="wishListError && wishListFlag" class="alert alert-warning" role="alert">
+                  No Records.
+              </div>
+              <div class="slide-left" ng-show="!wishListError && wishListFlag">
+                  <button ng-click="detailTab()" ng-disabled="disableDetail"class="btn btn-sm btn-light float-right">Detail<i style="vertical-align:middle;" class="material-icons md-18">keyboard_arrow_right</i></button>
+                    <div class="table-responsive-sm">
+                      <table class="table table-sm table-hover table-striped table-dark">
+                          <thead>
+                              <tr>
+                                  <th class="index" >#&nbsp;</th>
+                                  <th class="image" >Image&nbsp;</th>
+                                  <th class="title" >Title&nbsp;</th>
+                                  <th class="price" >Price&nbsp;</th>
+                                  <th class="shipping" >Shipping&nbsp;</th>
+                                  <th class="seller" >Selller&nbsp;</th>
+                                  <th class="wishlist" >Wish List</th>
+                              </tr>
+                          </thead>
+                         
+                          <tbody style="font-size:12px;">
+                              <tr ng-class="{highlight:currentItem.id==item.id}" ng-repeat="item in $storage.wishList">
+                                  <td>{{$index+1}}</td>
+                                  <td>
+                                    <a ng-href="{{item.image}}" target="_blank">
+	                                  <img style="width:100px;height:100px;" ng-src="{{item.image}}" alt="N/A" />
+	                                </a>
+                                  </td>
+                                  <td>
+                                  <a ng-click="showDetail(item,item.shippingInfo)">
+                                  <md-tooltip class="tooltip-multiline">{{item.title}}</md-tooltip>
+                                  <p class="underline-on-hover" style="color:blue">{{item.title | limitTo : 35}}...</p>
+                                  </a>
+                                  </td>
+                                  <td>${{item.price}}</td>
+                                  <td><span style="color:white" ng-show="item.shipping!='Free Shipping'">$</span>{{item.shipping}}</td>
+                                  <td>{{item.seller | uppercase}}</td>
+                                  <td>
+                                    <!-- bug -->
+                                    <button ng-show="!item.wishList" ng-click="addShoppingCart(item)" type="submit" class="btn btn-primary btn-light ">
+                                        <i class="material-icons md-24 md-dark">
+                                            add_shopping_cart
+                                        </i>
+                                    </button>
+
+                                    <button ng-show="item.wishList" ng-click="removeShoppingCart(item)" type="submit" class="btn btn-primary btn-light ">
+                                        <i style="color:darkgoldenrod" class="material-icons md-24">
+                                            remove_shopping_cart
+                                        </i>
+                                    </button>
+                                  </td>
+                              </tr>
+                          </tbody>
+                          <tfoot>
+                          	<tr style="text-align: right">
+                          	    <td></td>
+                          	    <td></td>
+                          	    <td></td>
+                          	    <td></td>
+                          	    <td></td>
+                          	    <td>Total Shopping:</td> 
+                          	    <td>${{ $storage.sum | number : 2}}</td>
+
+                          	</tr>
+                          </tfoot>
+                      </table>
+                    </div>
+                </div>
+          </div>
+
+          <div class="slide-left" ng-show=detailFlag ng-model="currentItem">
+
+               <h5 style="margin-top:20px;margin-bottom:20px;text-align: center;">{{product.title}}</h5>
+              <button ng-click="listTab()"class="btn btn-sm btn-light"><i style="vertical-align:middle;" class="material-icons md-18">keyboard_arrow_left</i>List</button>
+              
+              <button  ng-show="!currentItem.wishList" ng-click="addShoppingCart(currentItem)" type="submit" class="btn btn-primary btn-light float-right">
+                <i class="material-icons md-24 md-dark">
+                    add_shopping_cart
+                </i>
+              </button>
+
+              <button ng-show="currentItem.wishList" ng-click="removeShoppingCart(currentItem)" type="submit" class="btn btn-primary btn-light float-right">
+                  <i style="color:darkgoldenrod" class="material-icons md-24">
+                      remove_shopping_cart
+                  </i>
+              </button>
+
+              <button id="shareBtn" ng-model="fbInfo" ng-click="shareFacebook(fbInfo)" class="btn float-right"><img style="width:30px; height:30px;" src="http://csci571.com/hw/hw8/Images/facebook.png"/></button>
+              
+
+              
+              <div style="margin-top:10px;" class="row flex-nowrap justify-content-md-end justify-content-sm-start">
+                  <ul style="font-size: 12px;" class="nav nav-tabs justify-content-end">
+                      <li class="nav-item">
+                        <a class="nav-link active" data-toggle="tab" href="#product">Product</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#photos">Photos</a>
+                      </li>
+                      <li class="nav-item">
+                          <a class="nav-link" data-toggle="tab" href="#shipping">Shipping</a>
+                      </li>
+                      <li class="nav-item">
+                          <a class="nav-link" data-toggle="tab" href="#seller">Seller</a>
+                      </li>
+                      <li class="nav-item">
+                          <a class="nav-link" data-toggle="tab" href="#similar">
+                          <span class="similar-text">Similiar Product</span>
+                          <span class="related-text">Related</span>
+                          </a>
+                      </li>
+                  </ul>
+              </div>
+              <!-- Modal -->
+                                    <div style="color:black;cursor: pointer;" class="modal" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                      <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                          <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">product images</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                              <span aria-hidden="true">&times;</span>
+                                            </button>
+                                          </div>
+                                          <div class="modal-body">
+                                              <div ng-show="product.images.length==0">Images no found!</div>
+                                              <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+                                                  <div class="carousel-inner">
+                                                    <!-- <div class="carousel-item active">
+                                                        <a ng-href="{{product.images[0]}}" target="_blank">
+                                                        <img class="d-block w-100 my-img" ng-src={{product.images[0]}} alt="image">
+                                                        </a>
+                                                    </div> -->
+                                                    <div ng-class="{active:$index==0}" ng-repeat="imgSrc in product.images | limitTo: (0 - product.images.length)" class="carousel-item">
+                                                      <a ng-href="{{imgSrc}}" target="_blank">
+                                                      <img class="d-block w-100 my-img" ng-src={{imgSrc}} alt="image">
+                                                      </a>
+                                                    </div>
+                                                  </div>
+                                                  <a ng-hide="product.images.length<=1" class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+                                                    <span class="arrow carousel-control-prev-icon" aria-hidden="true"></span>
+                                                    <span class="sr-only">Previous</span>
+                                                  </a>
+                                                  <a ng-hide="product.images.length<=1" class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+                                                    <span class="arrow carousel-control-next-icon" aria-hidden="true"></span>
+                                                    <span class="sr-only">Next</span>
+                                                  </a>
+                                              </div>
+                                          </div>
+                                          <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                          </div> 
+                                        </div>            
+                                      </div>                                     
+                                    </div> 
+                                    <!-- modal -->
+              <div class="tab-content">
+                  <div ng-model="product" id="product" class="tab-pane fade show active">
+                    <div class="table-responsive-sm">
+                      <table class="table table-sm table-hover table-striped table-dark">
+                          <tbody>
+                            <tr>
+                              <td>Product Images</td>
+                              <td><!-- Button trigger modal -->
+                                <a style="color:green" data-toggle="modal" data-target="#exampleModal">
+                                    View Product Image Here
+                                </a>
+                                    
+                                    
+                                </td>
+                            </tr>
+
+                            <tr ng-show="product.subtitle!='N/A'"> 
+                              <td>Subtitle</td>
+                              <td>{{product.subtitle}}</td>
+                            </tr>
+                            <tr>
+                              <td>Prices</td>
+                              <td>${{product.price}}</td>
+                            </tr>
+                            <tr>
+                              <td>Location</td>
+                              <td>{{product.location}}</td>
+                            </tr>
+                            <tr>
+                              <td>Return Policy</td>
+                              <td>{{product.returnPolicy}}</td>
+                            </tr>
+                            <tr ng-repeat="spec in product.itemSpec">
+                               <td>{{spec.Name}}</td>
+                               <td>{{spec.Value[0]}}</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                     </div>
+                  </div>
+                  <div ng-model="photos" id="photos" class="tab-pane fade">
+                      <div class="container">
+                            <div class="row">
+                              <div class="col-md-4 col-sm-12 padding-0">
+                                  <a ng-href="{{photos[0]}}" target="_blank"><img class="img-thumbnail my-img2" ng-src="{{photos[0]}}" alt="N/A" /></a>
+                                  <a ng-href="{{photos[3]}}" target="_blank"><img class="img-thumbnail my-img2" ng-src="{{photos[3]}}" alt="N/A" /></a>     
+                              </div>
+                              <div class="col-md-4 col-sm-12 padding-0">
+                                  <a ng-href="{{photos[1]}}" target="_blank"><img class="img-thumbnail my-img2" ng-src="{{photos[1]}}" alt="N/A" /></a>
+                                  <a ng-href="{{photos[4]}}" target="_blank"><img class="img-thumbnail my-img2" ng-src="{{photos[4]}}" alt="N/A" /></a>
+                                  <a ng-href="{{photos[6]}}" target="_blank"><img class="img-thumbnail my-img2" ng-src="{{photos[6]}}" alt="N/A" /></a>
+                              </div>
+                              <div class="col-md-4 col-sm-12 padding-0">  
+                                  <a ng-href="{{photos[2]}}" target="_blank"><img class="img-thumbnail my-img2" ng-src="{{photos[2]}}" alt="N/A" /></a>
+                                  <a ng-href="{{photos[5]}}" target="_blank"><img class="img-thumbnail my-img2" ng-src="{{photos[5]}}" alt="N/A" /></a>
+                                  <a ng-href="{{photos[7]}}" target="_blank"><img class="img-thumbnail my-img2" ng-src="{{photos[7]}}" alt="N/A" /></a>
+                              </div>
+                            </div>
+                      </div>
+                  </div>
+                  <div ng-model="currentShipping" id="shipping" class="tab-pane fade">
+                     <div class="table-responsive-sm">
+                      <table class="table table-sm table-hover table-striped table-dark">
+                          
+                          <tbody>
+                            <tr>
+                              <td>Shipping Cost</td>
+                              <td><p ng-show="currentShipping.shippingServiceCost[0].__value__==0.0">Free Shipping</p>
+                                <p ng-show="currentShipping.shippingServiceCost[0].__value__!=0.0">${{currentShipping.shippingServiceCost[0].__value__}}</p>
+                                </td>
+                            </tr>
+                            <tr>
+                              <td>Shipping Locations</td>
+                              <td>{{currentShipping.shipToLocations[0]}}</td>
+                            </tr>
+                            <tr>
+                              <td>Handling time</td>
+                              <td>
+                              <p ng-show="currentShipping.handlingTime[0]<=1">{{currentShipping.handlingTime[0]}} Day</p>
+                              <p ng-show="currentShipping.handlingTime[0]>1">{{currentShipping.handlingTime[0]}} Days</p>
+                              </td>
+                            </tr>
+                            <tr ng-show="currentShipping.expeditedShipping[0]!=''"> 
+                              <td>Expedited Shipping</td>
+                              <td><i ng-show="currentShipping.expeditedShipping[0]=='false'" style="color:red" class="material-icons md-18">clear</i>
+                                <i ng-show="currentShipping.expeditedShipping[0]=='true'" style="color:green" class="material-icons md-18">done</i>
+                              </td>
+                            </tr>
+                            <tr ng-show="currentShipping.oneDayShippingAvailable[0]!=''">
+                              <td>One Day Shipping</td>
+                              <td><i ng-show="currentShipping.oneDayShippingAvailable[0]=='false'" style="color:red" class="material-icons md-18">clear</i>
+                                <i ng-show="currentShipping.oneDayShippingAvailable[0]=='true'" style="color:green" class="material-icons md-18">done</i>
+                              </td>
+                            </tr>
+                            <tr ng-show="currentShipping.returnsAccepted[0]!=''">
+                              <td>Return Accepted</td>
+                              <td><i ng-show="currentShipping.returnsAccepted[0]=='false'" style="color:red" class="material-icons md-18">clear</i>
+                                <i ng-show="currentShipping.returnsAccepted[0]=='true'" style="color:green" class="material-icons md-18">done</i>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                  </div>
+                  
+                  <div ng-model="seller" id="seller" class="tab-pane fade">
+                    <div class="table-responsive-sm">
+                      <table class="table table-sm table-hover table-striped table-dark">
+                          <thead>
+                              <tr>
+                                  <th style="text-align: center" colspan="2">{{seller.storeName | uppercase}}</th>
+                              </tr>
+                          </thead>
+                          <tbody>
+                            <tr ng-show="seller.feedbackScore!=''">
+                              <td>Feedback Score</td>
+                              <td>{{seller.feedbackScore}}</td>
+                            </tr>
+                            <tr>
+                              <td>Popularity</td>
+                              <td><round-progress
+                                max="100"
+                                current="seller.popularity"
+                                color="green"
+                                bgcolor="yellow"
+                                radius="17"
+                                stroke="2"
+                                semi="false"
+                                rounded="true"
+                                clockwise="true"
+                                responsive="false"
+                                duration="800"
+                                animation="easeInOutQuart"
+                                animation-delay="0">
+                                   </round-progress>
+                                   <span style="color:white; position:relative; font-size:13px;top: -27px;left:2px;">{{seller.popularity}}</span>
+                                </td>
+
+                            </tr>
+                            <tr ng-show="starColor!='white'">
+                              <td>Feedback Rating Star</td>
+
+                              <td>
+                                <i ng-show="seller.score==false" ng-style="starColor" class="material-icons md-18">stars</i>
+                                <i ng-show="seller.score==true" ng-style="starColor" class="material-icons md-18">star_border</i>
+                              </td> 
+
+                            </tr>
+                            <tr ng-show="seller.topRated.length!=0">
+                              <td>Top Rated</td>
+                              <td>
+                                  <i ng-show="seller.topRated==false" style="color:red" class="material-icons md-18">clear</i>
+                                  <i ng-show="seller.topRated==true" style="color:green" class="material-icons md-18">done</i>
+                              </td>
+                            </tr>
+                            <tr ng-show="seller.storeName.length!=0">
+                              <td>Store Name</td>
+                              <td>{{seller.storeName}}</td>
+                            </tr>
+                            <tr ng-show="seller.buyProduct!='' ">
+                              <td>Buy Product At</td>
+                              <td><a style="color:cadetblue" ng-href="{{seller.buyProduct}}" target="_blank" >Store</a></td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                  </div>
+                  <div ng-model="similarItems" id="similar" class="tab-pane fade">
+
+                     <div class="row" style="margin-top: 20px;margin-bottom: 20px;">
+                        <div class="col-md-2 col-sm-12">
+                            <select ng-model="orderMethod" class="form-control">
+                              <option value="">Default</option>
+                              <option value="productName">Product Name</option>
+                              <option value="dayLeft">Day Left</option>
+                              <option value="price">Price</option>
+                              <option value="shippingCost">Shipping Cost</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2 col-sm-12">
+                            <select ng-model="reverseMethod" class="form-control">
+                              <option value="false" >Ascending</option>
+                              <option value="true" >Descending</option>
+                            </select>
+                        </div>
+                     </div>
+                      
+                      <div ng-show="similarItems===undefined || similarItems.length==0" class="alert alert-warning" role="alert">
+                           No Records.
+                      </div>  
+                      <div ng-show="similarItems.length!=0" ng-model="simLen" >
+                      	<div ng-repeat="s in similarItems | limitTo: (0 - simLen)| orderBy : orderMethod : reverseMethod=='true' " class="card text-white bg-dark mb-2">
+						  <div class="card-body">
+						    <div class="row">
+						    	<div class="col-md-3 col-sm-12">
+						    		<a ng-href="{{s.url}}" target="_blank">
+						    		  <img style="width:140px;height:140px;" ng-src="{{s.url}}" alt="N/A" />
+						    		</a>
+						    	</div>
+						    	<div class="col-md-9 col-sm-12">
+						    		<a ng-href="https://www.ebay.com/" target="_blank">
+						    		  <span class="underline-on-hover" style="color:cadetblue">{{s.productName}}</span>
+						    		</a><br>
+	                                <span style="color:green">Price: ${{s.price}}</span><br>
+	                                <span style="color:darkgoldenrod">Shipping Cost: ${{s.shippingCost}}</span><br>
+	                                <span style="color:white">Day Left {{s.dayLeft}}</span>
+						    	</div>
+						    </div>
+						  </div>
+						</div>
+                      </div>
+                      <div ng-show="similarItems.length>=5" class="row justify-content-center">
+                        <button ng-show="simLen==5" class="btn btn-dark" ng-click="simLen=similarItems.length">Show More</button>
+                        <button ng-show="simLen>5" class="btn btn-dark" ng-click="simLen=5">Show Less</button>
+                      </div>
+                  </div>
+              </div> <!--  information layer -->
+          </div> <!--  detail layer -->
+
+        </div>
+     
+
+    </div>
+
+
+</div>
+<!-- Angular Material requires Angular.js Libraries -->
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.6/angular.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.6/angular-animate.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.6/angular-aria.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.6/angular-messages.min.js"></script>
+
+<!-- Angular Material Library -->
+<script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.12/angular-material.min.js"></script>
+
+<!-- local storage -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ngStorage/0.3.10/ngStorage.min.js"></script>
+
+<!-- popularity -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-svg-round-progressbar/0.4.8/roundProgress.min.js"></script>
+
+  <!-- progress -->
+  <link rel='stylesheet' href='//cdnjs.cloudflare.com/ajax/libs/angular-loading-bar/0.9.0/loading-bar.min.css' type='text/css' media='all' >
+  <script type='text/javascript' src='//cdnjs.cloudflare.com/ajax/libs/angular-loading-bar/0.9.0/loading-bar.min.js'></script>
+
+<!-- facebook sharing -->
+<script>
+    window.fbAsyncInit = function() {
+      FB.init({
+        appId            : '258246515127309',
+        autoLogAppEvents : true,
+        xfbml            : true,
+        version          : 'v3.2'
+      });
+    };
+   
+</script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-animate.js"></script>
+<script async defer src="https://connect.facebook.net/en_US/sdk.js"></script>
+<script type="text/javascript">
+
+  var app = angular.module('myApp', ['ngMaterial', 'ngAnimate','ngMessages','ngStorage','angular-svg-round-progressbar','angular-loading-bar', 'ngAnimate']);
+
+  app.config(['cfpLoadingBarProvider', function(cfpLoadingBarProvider) {
+    cfpLoadingBarProvider.parentSelector = '#loading-bar-container';
+    cfpLoadingBarProvider.spinnerTemplate = '<div class="progress"><div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 50%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div></div>';
+  }])
+
+  app.config(['cfpLoadingBarProvider', function(cfpLoadingBarProvider) {
+	cfpLoadingBarProvider.includeBar = false;
+  }])
+
+
+	app.controller('myCtrl', function($timeout,$q,$log,$scope,$http,$filter,$localStorage) {
+
+
+    //init store
+    $scope.$storage = $localStorage.$default({
+          sum:0.0,
+          wishList:[]
+    });
+
+
+    var self = this;
+    self.states        = loadAll();
+    self.querySearch   = querySearch;
+    self.selectedItemChange = selectedItemChange;
+    self.searchTextChange   = searchTextChange;
+
+    self.newState = newState;
+    
+    var zipcode='';
+
+    function newState(state) {
+      alert("Sorry! You'll need to create a Constitution for " + state + " first!");
+    }
+
+    function querySearch (query) {
+      var results = query ? self.states.filter(createFilterFor(query)) : self.states,
+          deferred;
+      return results;
+    }
+
+
+    function searchTextChange(text) {
+      $log.info('Text changed to ' +text);
+      if(text=='')return;
+
+      $http({
+      	  ignoreLoadingBar: true,
+          url: '/auto/'+text, 
+          method: "GET"
+        })
+        .then(function(response) {
+          console.log("zipcode search result: "+response.data);
+          self.states=response.data.map(function (state) {
+            return {
+              value: state,
+              display: state
+            };
+          });
+        }, function(response) {
+        	console.log("zipcode not found");
+      });
+
+    }
+
+    function selectedItemChange(item) {
+      $log.info('Item changed to ' + JSON.stringify(item));
+    }
+
+    function loadAll() {
+      var allStates =[];
+      return allStates.map(function (state) {
+        return {
+          value: state,
+          display: state
+        };
+      });
+    }
+
+    function createFilterFor(query) {
+      var lowercaseQuery = query.toLowerCase();
+      return function filterFn(state) {
+        return (state.value.indexOf(lowercaseQuery) === 0);
+      };
+    }
+
+
+    
+    //init default value
+    $scope.category = '0';
+    $scope.orderMethod="";
+    $scope.reverseMethod="false";
+    $scope.simLen=5;
+
+    //init flag
+    $scope.disableDetail=true;
+    $scope.listFlag=true;
+    $scope.listError=false;
+    $scope.wishListFlag=false;
+    // $scope.wishListError=true;
+
+    $scope.detailFlag=false;
+    $scope.resultFlag=false;
+
+	  if($scope.$storage.wishList.length==0){
+	    $scope.wishListError=true;
+	  }
+
+    // init geolocation
+    $http.get("http://ip-api.com/json")
+		.then(function(response) {
+		  	console.log("current location:"+response.data.zip);
+        $scope.herezip = response.data.zip;
+    });
+
+    $scope.listTab=function(){
+      $scope.listFlag=true;
+      $scope.wishListFlag=false;
+      $scope.detailFlag=false;
+
+      document.getElementById("resultpill").classList.add("active");
+      document.getElementById("wishpill").classList.remove("active");
+
+      document.getElementById("result").classList.add("show");
+      document.getElementById("result").classList.add("active");
+      document.getElementById("wishList").classList.remove("show");
+      document.getElementById("wishList").classList.remove("active");
+    }
+
+    $scope.detailTab=function(){
+      $scope.detailFlag=true;
+      $scope.listFlag=false;
+      $scope.wishListFlag=false;
+      document.getElementById("exampleModal").classList.remove("slide-left"); 
+    }
+
+    $scope.wishTab=function(){
+      $scope.wishListFlag=true;
+      $scope.listFlag=false;
+      $scope.detailFlag=false;
+
+      document.getElementById("resultpill").classList.remove("active");
+      document.getElementById("wishpill").classList.add("active");
+
+      document.getElementById("result").classList.remove("show");
+      document.getElementById("result").classList.remove("active");
+      document.getElementById("wishList").classList.add("show");
+      document.getElementById("wishList").classList.add("active");
+    }
+
+    $scope.addShoppingCart=function(item){
+      $scope.wishListError=false;
+      item.wishList=true;
+      $scope.$storage.wishList.push(item);
+      $scope.$storage.sum+=parseFloat(item.price);
+    }
+
+    $scope.removeShoppingCart=function(item){
+      item.wishList=false;
+      $scope.$storage.sum-=parseFloat(item.price);
+      $scope.$storage.wishList = $scope.$storage.wishList.filter(function( obj ) {
+          return obj.id !==item.id;
+      });
+      if($scope.$storage.wishList.length==0){
+        $scope.wishListError=true;
+      }
+    }
+
+
+    $scope.sort = {       
+      sortingOrder : 'id',
+      reverse : false
+    };
+    
+    $scope.gap = 5;//5
+    $scope.filteredItems = [];
+    $scope.groupedItems = [];
+    $scope.itemsPerPage = 10;
+    $scope.pagedItems = [];
+    $scope.currentPage = 0;
+    $scope.items = [];
+
+    
+    var searchMatch = function (haystack, needle) {
+        if (!needle) {
+            return true;
+        }
+        return haystack.toLowerCase().indexOf(needle.toLowerCase()) !== -1;
+    };
+
+    $scope.showItem = function () {
+    	$scope.gap=parseInt(($scope.items.length-1)/10)+1;
+        $scope.filteredItems = $filter('filter')($scope.items, function (item) {
+            for(var attr in item) {
+                if (searchMatch(item[attr], $scope.query))
+                    return true;
+            }
+            return false;
+        });
+        $scope.currentPage = 0;
+        $scope.groupToPages();
+    };
+    
+    $scope.groupToPages = function () {
+        $scope.pagedItems = [];
+        
+        for (var i = 0; i < $scope.filteredItems.length; i++) {
+            if (i % $scope.itemsPerPage === 0) {
+                $scope.pagedItems[Math.floor(i / $scope.itemsPerPage)] = [ $scope.filteredItems[i] ];
+            } else {
+                $scope.pagedItems[Math.floor(i / $scope.itemsPerPage)].push($scope.filteredItems[i]);
+            }
+        }
+    };
+    
+    $scope.range = function (size,start, end) {
+        var ret = [];                
+        if (size < end) {
+            end = size;
+            start = size-$scope.gap;
+        }
+        for (var i = start; i < end; i++) {
+            ret.push(i);
+        }            
+        return ret;
+    };
+    
+    $scope.prevPage = function () {
+        if ($scope.currentPage > 0) {
+            $scope.currentPage--;
+        }
+    };
+    
+    $scope.nextPage = function () {
+        if ($scope.currentPage < $scope.pagedItems.length - 1) {
+            $scope.currentPage++;
+        }
+    };
+    
+    $scope.setPage = function () {
+        $scope.currentPage = this.n;
+    };
+
+     
+    $scope.reset = function() {
+	    // $scope.resultFlag=false;
+	    // $scope.listError=false;
+	    // $scope.wishListError=true;
+        //init value
+        $scope.keyword='';
+        $scope.myForm.keyword.$touched=false; 
+
+        $scope.category = '0';
+        $scope.new=false;
+        $scope.used=false;
+        $scope.unspec=false;
+        $scope.free=false;
+        $scope.pickup=false;
+        $scope.distance='';
+        // $scope.myForm.myzipcode.$modelValue='';
+        // $scope.myForm.myzipcode.$viewValue='';
+        // self.searchTextChange('')
+        $scope.method='here';
+
+        
+        $scope.myForm.$setPristine(true)
+
+        //init flag
+	    $scope.disableDetail=true;
+	    $scope.listFlag=true;
+	    $scope.listError=false;
+	    $scope.wishListFlag=false;
+
+	    $scope.detailFlag=false;
+	    $scope.resultFlag=false;
+
+	    
+	    $scope.orderMethod="";
+	    $scope.reverseMethod="false";
+	    $scope.simLen=5;
+    };
+      
+    $scope.search=function(){
+      $scope.listError=false;
+      $scope.resultFlag=true;
+      var keyword=$scope.keyword;
+      
+      var category='0';
+      if($scope.category!='0'){
+        category=$scope.category;
+      }
+
+      var New=false;
+      if($scope.new!==undefined){
+        New=$scope.new;
+      }
+      var used=false;
+      if($scope.used!==undefined){
+        used=$scope.used;
+      }
+      var unspec=false;
+      if($scope.unspec!==undefined){
+        unspec=$scope.unspec;
+      }
+
+      var pickup=false;
+      if($scope.pickup!==undefined){
+          pickup=$scope.pickup;
+      }
+      var free=false;
+      if($scope.free!==undefined){
+          free=$scope.free;
+      }
+
+      var maxDistance=10;
+      if($scope.distance!==undefined && $scope.distance!=''){
+        maxDistance=$scope.distance;
+      }
+
+
+      zipcode=$scope.herezip;
+      if($scope.method=='zip'){
+        zipcode=$scope.myForm.myzipcode.$viewValue;
+      }
+
+      console.log("keyword "+keyword);
+      console.log("category "+category);
+      console.log("new "+New);
+      console.log("used "+used);
+      console.log("unspec "+unspec);
+      console.log("pickup "+pickup);
+      console.log("free "+free);
+      console.log("distance "+maxDistance);
+      console.log("zipcode "+zipcode);
+	    $http({
+			    url: '/productSearch', 
+			    method: "GET",
+          params: 
+           {
+             keyword:keyword,
+             category:category,
+             New:New,
+             used:used,
+             unspec:unspec,
+             free:free,
+             pickup:pickup,
+             maxDistance:maxDistance,
+             zipcode:zipcode  
+           }
+			   })
+			  .then(function(response) {
+          $scope.items=response.data;
+          if(typeof $scope.items === 'string' || $scope.items instanceof String){
+            $scope.errorMsg=response.data;
+            $scope.listError=true;
+            $scope.listFlag=false;
+          }else{
+            $scope.listTab();
+            $scope.showItem();
+          }
+			  }, function(response) {
+          $scope.listError=true;
+          $scope.listFlag=false;
+			  });
+        
+    }
+
+    $scope.shareFacebook= function(info){
+      FB.ui({
+        method: 'share',
+        display: 'popup',
+        quote: "Buy "+info.productName+" at $"+info.price+" from link below",
+        href: info.link,
+      }, function(response){});
+    }
+
+    $scope.showDetail=function(item,shippingInfo){
+      $scope.disableDetail=false;
+      $scope.listFlag=false;
+      $scope.wishListFlag=false;
+      $scope.detailFlag=true;
+      $scope.currentShipping=shippingInfo;
+      $scope.currentItem=item;
+      $http({
+			    url: '/item/'+item.id, 
+			    method: "GET"
+			   })
+			  .then(function(response) {
+          
+          $scope.product=response.data.product;
+          $scope.seller=response.data.seller;
+          $scope.similarItems=response.data.similar;
+          $scope.photos=response.data.photos;
+          $scope.fbInfo=response.data.fbInfo;
+          $scope.starColor = {
+            "color" : $scope.seller.feedbackRating
+          }
+			  }, function(response) {
+			    console.log("detail res error");
+			  });
+    }
+	});
+	</script>
+	 
+  </body>
+</html>
